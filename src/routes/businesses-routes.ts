@@ -1,12 +1,15 @@
 import { Router } from "express";
 
-import { createBusiness } from "../controllers/businsesses-controller";
+import {
+  createBusiness,
+  getBusinesses,
+} from "../controllers/businsesses-controller";
 
 const router = Router();
 
 router.post("/", createBusiness);
 
-router.get("/");
+router.get("/", getBusinesses);
 
 router.patch("/:id");
 
