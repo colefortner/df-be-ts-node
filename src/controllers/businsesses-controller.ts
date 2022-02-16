@@ -6,6 +6,7 @@ const BUSINESSES: Business[] = [];
 
 export const createBusiness: RequestHandler = (req, res, next) => {
   const text = (req.body as { name: string }).name;
+  let id = 0;
   const newBusiness = new Business(Math.random().toString(), text);
 
   BUSINESSES.push(newBusiness);
@@ -25,7 +26,6 @@ export const updateBusiness: RequestHandler<{ id: string }> = (
   next
 ) => {
   const businessId = req.params.id;
-
   const updatedName = (req.body as { name: string }).name;
 
   const businessIndex = BUSINESSES.findIndex(
