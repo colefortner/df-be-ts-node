@@ -18,3 +18,30 @@ export const createBusiness: RequestHandler = (req, res, next) => {
 export const getBusinesses: RequestHandler = (req, res, next) => {
   res.json({ businesses: BUSINESSES });
 };
+
+export const updateBusiness: RequestHandler<{ id: string }> = (
+  req,
+  res,
+  next
+) => {
+  const businessId = req.params.id;
+
+  const updatedName = (req.body as { name: string }).name;
+
+  const businessIndex = BUSINESSES.findIndex(
+    (business) => business.id === businessId
+  );
+
+  if (businessIndex < 0) {
+    throw new Error("Could not find business");
+  }
+
+  BUSINESSES[businessIndex] = new Business(
+    BUSINESSES[businessIndex].id,
+    updatedName
+  );
+
+  res.json({ message: "Updated", updatedBusiness: BUSINESSES[businessIndex] });
+};
+
+export const deleteBusiness: RequestHandler = (req, res, next) => {};
