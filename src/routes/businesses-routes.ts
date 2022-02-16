@@ -4,6 +4,7 @@ import {
   createBusiness,
   getBusinesses,
   updateBusiness,
+  deleteBusiness,
 } from "../controllers/businsesses-controller";
 
 const router = Router();
@@ -14,6 +15,6 @@ router.get("/", getBusinesses);
 
 router.patch("/:id", updateBusiness);
 
-router.delete("/:id");
+router.delete("/:id", deleteBusiness);
 
 export default router;

@@ -44,4 +44,17 @@ export const updateBusiness: RequestHandler<{ id: string }> = (
   res.json({ message: "Updated", updatedBusiness: BUSINESSES[businessIndex] });
 };
 
-export const deleteBusiness: RequestHandler = (req, res, next) => {};
+export const deleteBusiness: RequestHandler = (req, res, next) => {
+  const businessId = req.params.id;
+
+  const businessIndex = BUSINESSES.findIndex(
+    (business) => business.id === businessId
+  );
+
+  if (businessIndex < 0) {
+    throw new Error("Could not find business");
+  }
+  BUSINESSES.splice(businessIndex, 1);
+
+  res.json({ message: "Business deleted!" });
+};
