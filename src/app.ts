@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import { json } from "body-parser";
+import mongoose from "mongoose";
 
 import businessRoutes from "./routes/businesses-routes";
 import userRoutes from "./routes/users-routes";
@@ -15,4 +16,15 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: err.message });
 });
 
-app.listen(4000);
+mongoose
+  .connect(
+    "mongodb+srv://colefortner:colefortner@cluster0.psdhm.mongodb.net/another?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    app.listen(5050, () => {
+      console.log("Serving on port 5050");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
