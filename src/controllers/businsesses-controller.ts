@@ -68,17 +68,30 @@ export const updateBusiness: RequestHandler<{ id: string }> = (
   res.json({ message: "Updated", updatedBusiness: BUSINESSES[businessIndex] });
 };
 
-export const deleteBusiness: RequestHandler = (req, res, next) => {
+export const deleteBusiness: RequestHandler = async (req, res, next) => {
   const businessId = req.params.id;
 
-  const businessIndex = BUSINESSES.findIndex(
-    (business) => business.id === businessId
-  );
+  let business;
 
-  if (businessIndex < 0) {
+  try {
+    business = await BusinessModel.findById(businessId);
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+
+  if (!business) {
     throw new Error("Could not find business");
   }
-  BUSINESSES.splice(businessIndex, 1);
 
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await business.remove({ session: sess });
+    await sess.commitTransaction();
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
   res.json({ message: "Business deleted!" });
 };
