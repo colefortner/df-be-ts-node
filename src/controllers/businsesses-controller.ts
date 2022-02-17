@@ -6,11 +6,6 @@ import { BusinessModel, IBusiness } from "../models/business";
 const BUSINESSES: IBusiness[] = [];
 
 export const createBusiness: RequestHandler = async (req, res, next) => {
-  // const text = (req.body as { name: string }).name;
-  // let id = 0;
-  // const newBusiness = new BusinessModel(Math.random().toString(), text);
-
-  // BUSINESSES.push(newBusiness);
   const { id, name, image, rating, location } = req.body;
 
   const createdBusiness = new BusinessModel({
@@ -34,8 +29,19 @@ export const createBusiness: RequestHandler = async (req, res, next) => {
   res.status(201).json({ message: "Created business", createdBusiness });
 };
 
-export const getBusinesses: RequestHandler = (req, res, next) => {
-  res.json({ businesses: BUSINESSES });
+export const getBusinesses: RequestHandler = async (req, res, next) => {
+  let businesses;
+  try {
+    businesses = await BusinessModel.find({});
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+  res.json({
+    businesses: businesses.map((business) =>
+      business.toObject({ getters: true })
+    ),
+  });
 };
 
 export const updateBusiness: RequestHandler<{ id: string }> = (
