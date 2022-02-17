@@ -18,7 +18,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 mongoose
   .connect(
-    "mongodb+srv://colefortner:colefortner@cluster0.psdhm.mongodb.net/another?retryWrites=true&w=majority"
+    "mongodb+srv://colefortner:colefortner@cluster0.psdhm.mongodb.net/test?retryWrites=true&w=majority"
   )
   .then(() => {
     app.listen(5050, () => {

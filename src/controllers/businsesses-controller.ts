@@ -1,19 +1,37 @@
 import { RequestHandler } from "express";
+import mongoose from "mongoose";
 
-import { Business } from "../models/business";
+import { BusinessModel, IBusiness } from "../models/business";
 
-const BUSINESSES: Business[] = [];
+const BUSINESSES: IBusiness[] = [];
 
-export const createBusiness: RequestHandler = (req, res, next) => {
-  const text = (req.body as { name: string }).name;
-  let id = 0;
-  const newBusiness = new Business(Math.random().toString(), text);
+export const createBusiness: RequestHandler = async (req, res, next) => {
+  // const text = (req.body as { name: string }).name;
+  // let id = 0;
+  // const newBusiness = new BusinessModel(Math.random().toString(), text);
 
-  BUSINESSES.push(newBusiness);
+  // BUSINESSES.push(newBusiness);
+  const { id, name, image, rating, location } = req.body;
 
-  res
-    .status(201)
-    .json({ message: "Created business", createdBusiness: newBusiness });
+  const createdBusiness = new BusinessModel({
+    id,
+    name,
+    image,
+    rating,
+    location,
+  });
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdBusiness.save({ session: sess });
+    await sess.commitTransaction();
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+
+  res.status(201).json({ message: "Created business", createdBusiness });
 };
 
 export const getBusinesses: RequestHandler = (req, res, next) => {
@@ -36,7 +54,7 @@ export const updateBusiness: RequestHandler<{ id: string }> = (
     throw new Error("Could not find business");
   }
 
-  BUSINESSES[businessIndex] = new Business(
+  BUSINESSES[businessIndex] = new BusinessModel(
     BUSINESSES[businessIndex].id,
     updatedName
   );
