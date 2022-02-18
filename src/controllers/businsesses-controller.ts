@@ -44,28 +44,38 @@ export const getBusinesses: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const updateBusiness: RequestHandler<{ id: string }> = (
+export const updateBusiness: RequestHandler<IBusiness> = async (
   req,
   res,
   next
 ) => {
+  const { id, name, image, rating, location } = req.body;
   const businessId = req.params.id;
-  const updatedName = (req.body as { name: string }).name;
 
-  const businessIndex = BUSINESSES.findIndex(
-    (business) => business.id === businessId
-  );
+  let business;
 
-  if (businessIndex < 0) {
+  try {
+    business = await BusinessModel.findById(businessId);
+  } catch (err) {
+    console.log(err);
+    return next();
+  }
+
+  if (!business) {
     throw new Error("Could not find business");
   }
 
-  BUSINESSES[businessIndex] = new BusinessModel(
-    BUSINESSES[businessIndex].id,
-    updatedName
-  );
+  business.name = name;
+  business.rating = rating;
 
-  res.json({ message: "Updated", updatedBusiness: BUSINESSES[businessIndex] });
+  try {
+    await business?.save();
+  } catch (err) {
+    console.log(err);
+    return next();
+  }
+
+  res.status(200).json({ business: business.toObject({ getters: true }) });
 };
 
 export const deleteBusiness: RequestHandler = async (req, res, next) => {
