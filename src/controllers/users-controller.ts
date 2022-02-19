@@ -3,6 +3,18 @@ import mongoose from "mongoose";
 
 import { UserModel, IUser } from "../models/user";
 
+export const getUsers: RequestHandler = async (req, res, next) => {
+  let users;
+  try {
+    users = await UserModel.find({});
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+
+  res.json({ users: users.map((user) => user.toObject({ getters: true })) });
+};
+
 export const createUser: RequestHandler = async (req, res, next) => {
   const { id, username, email, password, image } = req.body;
 
