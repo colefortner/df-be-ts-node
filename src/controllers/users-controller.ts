@@ -39,6 +39,37 @@ export const createUser: RequestHandler = async (req, res, next) => {
   res.status(201).json({ message: "Created user", createdUser });
 };
 
+export const updateUser: RequestHandler<IUser> = async (req, res, next) => {
+  const { id, username, email, password, image } = req.body;
+  const userId = req.params.id;
+
+  let user;
+
+  try {
+    user = await UserModel.findById(userId);
+  } catch (err) {
+    console.log(err);
+    return next();
+  }
+
+  if (!user) {
+    throw new Error("Could not find user");
+  }
+
+  user.id = id;
+  user.username = username;
+  user.email = email;
+
+  try {
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    return next();
+  }
+
+  res.status(200).json({ user: user.toObject({ getters: true }) });
+};
+
 export const deleteUser: RequestHandler = async (req, res, next) => {
   const userId = req.params.id;
 
