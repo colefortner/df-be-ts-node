@@ -27,10 +27,7 @@ export const createUser: RequestHandler = async (req, res, next) => {
   });
 
   try {
-    const sess = await mongoose.startSession();
-    sess.startTransaction();
-    await createdUser.save({ session: sess });
-    await sess.commitTransaction();
+    await createdUser.save();
   } catch (err) {
     console.log(err);
     return next(err);
@@ -87,10 +84,7 @@ export const deleteUser: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const sess = await mongoose.startSession();
-    sess.startTransaction();
-    await user.remove({ session: sess });
-    await sess.commitTransaction();
+    await user.remove();
   } catch (err) {
     console.log(err);
     return next(err);
