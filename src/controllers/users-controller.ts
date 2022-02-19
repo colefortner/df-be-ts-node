@@ -38,3 +38,32 @@ export const createUser: RequestHandler = async (req, res, next) => {
 
   res.status(201).json({ message: "Created user", createdUser });
 };
+
+export const deleteUser: RequestHandler = async (req, res, next) => {
+  const userId = req.params.id;
+
+  let user;
+
+  try {
+    user = await UserModel.findById(userId);
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+
+  if (!user) {
+    throw new Error("Could not find user");
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await user.remove({ session: sess });
+    await sess.commitTransaction();
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+
+  res.json({ message: "User deleted!" });
+};
