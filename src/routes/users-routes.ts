@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { fileUpload } from "../middleware/file-upload";
 
 import {
   createUser,
@@ -9,7 +10,7 @@ import {
 
 const router = Router();
 
-router.post("/", createUser);
+router.post("/", fileUpload.single("image"), createUser);
 
 router.get("/", getUsers);
 

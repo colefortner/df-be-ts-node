@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-import mongoose from "mongoose";
 
 import { UserModel, IUser } from "../models/user";
 
@@ -16,14 +15,22 @@ export const getUsers: RequestHandler = async (req, res, next) => {
 };
 
 export const createUser: RequestHandler = async (req, res, next) => {
-  const { id, username, email, password, image } = req.body;
+  // console.log("REQUEST BODY", req.body);
+
+  const { id, username, email, password } = req.body;
+
+  console.log(req.file);
+  if (!req.file) {
+    console.log("No file uploaded");
+    return;
+  }
 
   const createdUser = new UserModel({
     id,
     username,
     email,
     password,
-    image,
+    image: req.file.path,
   });
 
   try {

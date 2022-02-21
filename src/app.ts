@@ -1,14 +1,18 @@
 import express, { Request, Response, NextFunction } from "express";
-import { json } from "body-parser";
 import mongoose from "mongoose";
+import path from "path";
 
 import businessRoutes from "./routes/businesses-routes";
 import userRoutes from "./routes/users-routes";
-import { runInNewContext } from "vm";
 
 const app = express();
 
-app.use(json());
+app.use(express.json());
+
+app.use(
+  "src/uploads/images",
+  express.static(path.join("src", "uploads", "images"))
+);
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
