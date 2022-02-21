@@ -3,6 +3,7 @@ import { fileUpload } from "../middleware/file-upload";
 
 import {
   createUser,
+  loginUser,
   getUsers,
   deleteUser,
   updateUser,
@@ -11,6 +12,8 @@ import {
 const router = Router();
 
 router.post("/", fileUpload.single("image"), createUser);
+
+router.post("/login", loginUser);
 
 router.get("/", getUsers);
 

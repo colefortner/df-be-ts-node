@@ -43,6 +43,12 @@ export const createUser: RequestHandler = async (req, res, next) => {
   res.status(201).json({ message: "Created user", createdUser });
 };
 
+export const loginUser: RequestHandler = async (req, res, next) => {
+  console.log(req.body);
+
+  res.json({ message: "Login data received" });
+};
+
 export const updateUser: RequestHandler<IUser> = async (req, res, next) => {
   const { id, username, email, password, image } = req.body;
   const userId = req.params.id;
