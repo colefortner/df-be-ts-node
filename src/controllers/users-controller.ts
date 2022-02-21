@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import bcrypt from "bcrypt";
 
 import { UserModel, IUser } from "../models/user";
 
@@ -25,11 +26,19 @@ export const createUser: RequestHandler = async (req, res, next) => {
     return;
   }
 
+  let hashedPassword;
+
+  try {
+    hashedPassword = await bcrypt.hash(password, 12);
+  } catch (err) {
+    return next(err);
+  }
+
   const createdUser = new UserModel({
     id,
     username,
     email,
-    password,
+    password: hashedPassword,
     image: req.file.path,
   });
 
