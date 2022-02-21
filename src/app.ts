@@ -4,6 +4,7 @@ import path from "path";
 
 import businessRoutes from "./routes/businesses-routes";
 import userRoutes from "./routes/users-routes";
+import commentRoutes from "./routes/comments-routes";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
 app.use("/businesses", businessRoutes);
 app.use("/users", userRoutes);
+app.use("/comments", commentRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: err.message });
