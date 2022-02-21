@@ -20,10 +20,24 @@ export const createUser: RequestHandler = async (req, res, next) => {
 
   const { id, username, email, password } = req.body;
 
+  let doesUserExist;
+
+  try {
+    doesUserExist = await UserModel.findOne({ email: email });
+  } catch (err) {
+    const error = Error("Signup failed");
+    return next(error);
+  }
+
+  if (doesUserExist) {
+    const error = Error("User already exists");
+    return next(error);
+  }
+
   console.log(req.file);
   if (!req.file) {
-    console.log("No file uploaded");
-    return;
+    const error = Error("No file uploaded");
+    return next(error);
   }
 
   let hashedPassword;
@@ -31,7 +45,8 @@ export const createUser: RequestHandler = async (req, res, next) => {
   try {
     hashedPassword = await bcrypt.hash(password, 12);
   } catch (err) {
-    return next(err);
+    const error = Error("Password hash failed");
+    return next(error);
   }
 
   const createdUser = new UserModel({
@@ -45,8 +60,8 @@ export const createUser: RequestHandler = async (req, res, next) => {
   try {
     await createdUser.save();
   } catch (err) {
-    console.log(err);
-    return next(err);
+    const error = Error("User creation failed");
+    return next(error);
   }
 
   res.status(201).json({ message: "Created user", createdUser });
