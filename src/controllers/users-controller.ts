@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import bcrypt from "bcrypt";
+import jsonwebtoken from "jsonwebtoken";
 
 import { UserModel, IUser } from "../models/user";
 
@@ -64,7 +65,19 @@ export const createUser: RequestHandler = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ message: "Created user", createdUser });
+  let token;
+  try {
+    token = jsonwebtoken.sign(
+      { userId: createdUser.id, email: createdUser.email },
+      "hello world",
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    const error = "User creation failed";
+    return next(error);
+  }
+
+  res.status(201).json({ message: "Created user", createdUser, token: token });
 };
 
 export const loginUser: RequestHandler = async (req, res, next) => {
