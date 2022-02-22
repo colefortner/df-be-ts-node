@@ -34,3 +34,29 @@ export const createComment: RequestHandler = async (req, res, next) => {
   // res.json({ message: "comment data received" });
   res.status(201).json({ message: "Created comment", createdComment });
 };
+
+export const deleteComment: RequestHandler = async (req, res, next) => {
+  const commentId = req.params.id;
+
+  let comment;
+
+  try {
+    comment = await CommentModel.findById(commentId);
+  } catch (err) {
+    const error = "Could not find comment";
+    return next(error);
+  }
+
+  if (!comment) {
+    throw new Error("Could not find error");
+  }
+
+  try {
+    await comment.remove();
+  } catch (err) {
+    const error = "Could not delete comment";
+    return next(error);
+  }
+
+  res.json({ message: "Commnet deleted!" });
+};

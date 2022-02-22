@@ -1,6 +1,10 @@
 import { Router } from "express";
 
-import { createComment, getComments } from "../controllers/comments-controller";
+import {
+  createComment,
+  deleteComment,
+  getComments,
+} from "../controllers/comments-controller";
 
 const router = Router();
 
@@ -10,6 +14,6 @@ router.get("/", getComments);
 
 router.patch("/:id");
 
-router.delete("/:id");
+router.delete("/:id", deleteComment);
 
 export default router;
