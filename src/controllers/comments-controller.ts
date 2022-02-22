@@ -1,6 +1,20 @@
 import { RequestHandler } from "express";
 import { CommentModel, IComment } from "../models/comment";
 
+export const getComments: RequestHandler = async (req, res, next) => {
+  let comments;
+  try {
+    comments = await CommentModel.find({});
+  } catch (err) {
+    const error = "Could not load comments";
+    next(error);
+  }
+
+  res.json({
+    comments: comments?.map((comment) => comment.toObject({ getters: true })),
+  });
+};
+
 export const createComment: RequestHandler = async (req, res, next) => {
   console.log(req.body);
 
