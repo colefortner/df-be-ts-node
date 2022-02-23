@@ -21,16 +21,16 @@ export const createUser: RequestHandler = async (req, res, next) => {
 
   const { id, username, email, password } = req.body;
 
-  let doesUserExist;
+  let user;
 
   try {
-    doesUserExist = await UserModel.findOne({ email: email });
+    user = await UserModel.findOne({ email: email });
   } catch (err) {
     const error = Error("Signup failed");
     return next(error);
   }
 
-  if (doesUserExist) {
+  if (user) {
     const error = Error("User already exists");
     return next(error);
   }
@@ -83,7 +83,50 @@ export const createUser: RequestHandler = async (req, res, next) => {
 export const loginUser: RequestHandler = async (req, res, next) => {
   console.log(req.body);
 
-  res.json({ message: "Login data received" });
+  const { email, password } = req.body;
+
+  let user;
+
+  try {
+    user = await UserModel.findOne({ email: email });
+  } catch (err) {
+    const error = "Could not find user email";
+    return next(error);
+  }
+
+  if (!user) {
+    const error = "Could not find user email";
+    return next(error);
+  }
+
+  let isPasswordValid = false;
+
+  try {
+    isPasswordValid = await bcrypt.compare(password, user.password);
+  } catch (err) {
+    const error = "Incorrect password";
+    return next(error);
+  }
+
+  let token;
+
+  try {
+    token = jsonwebtoken.sign(
+      { userId: user.id, email: user.email },
+      "hello world",
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    const error = "Token generation failed during login attempt";
+    return next(error);
+  }
+
+  // res.json({ message: "Login data received" });
+  res.json({
+    userId: user.id,
+    email: user.email,
+    token: token,
+  });
 };
 
 export const updateUser: RequestHandler<IUser> = async (req, res, next) => {
