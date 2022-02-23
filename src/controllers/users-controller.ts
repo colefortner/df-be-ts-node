@@ -51,7 +51,6 @@ export const createUser: RequestHandler = async (req, res, next) => {
   }
 
   const createdUser = new UserModel({
-    id,
     username,
     email,
     password: hashedPassword,
@@ -129,8 +128,8 @@ export const loginUser: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const updateUser: RequestHandler<IUser> = async (req, res, next) => {
-  const { id, username, email, password, image } = req.body;
+export const updateUser: RequestHandler = async (req, res, next) => {
+  const { username, email, password, image } = req.body;
   const userId = req.params.id;
 
   let user;
@@ -146,7 +145,6 @@ export const updateUser: RequestHandler<IUser> = async (req, res, next) => {
     throw new Error("Could not find user");
   }
 
-  user.id = id;
   user.username = username;
   user.email = email;
 

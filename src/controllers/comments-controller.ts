@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { CommentModel, IComment } from "../models/comment";
+import { CommentModel } from "../models/comment";
 
 export const getComments: RequestHandler = async (req, res, next) => {
   let comments;
@@ -35,11 +35,7 @@ export const createComment: RequestHandler = async (req, res, next) => {
   res.status(201).json({ message: "Created comment", createdComment });
 };
 
-export const updateComment: RequestHandler<IComment> = async (
-  req,
-  res,
-  next
-) => {
+export const updateComment: RequestHandler = async (req, res, next) => {
   const { comment } = req.body;
 
   const commentId = req.params.id;

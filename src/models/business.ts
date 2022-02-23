@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 
 export interface IBusiness {
-  id: string;
   name: string;
   image: string;
   rating: number;
@@ -12,7 +11,6 @@ export interface IBusiness {
 }
 
 const businessSchema = new Schema<IBusiness>({
-  id: { type: String, required: true },
   name: { type: String, required: true },
   image: { type: String, required: true },
   rating: { type: Number, required: true },
