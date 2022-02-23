@@ -35,6 +35,40 @@ export const createComment: RequestHandler = async (req, res, next) => {
   res.status(201).json({ message: "Created comment", createdComment });
 };
 
+export const updateComment: RequestHandler<IComment> = async (
+  req,
+  res,
+  next
+) => {
+  const { comment } = req.body;
+
+  const commentId = req.params.id;
+
+  let commentt;
+
+  try {
+    commentt = await CommentModel.findById(commentId);
+  } catch (err) {
+    const error = "Could not find comment";
+    return next(error);
+  }
+
+  if (!commentt) {
+    throw new Error("Could not find comment");
+  }
+
+  commentt.comment = comment;
+
+  try {
+    await commentt?.save();
+  } catch (err) {
+    const error = "Could not save comment update";
+    return next(error);
+  }
+
+  res.status(200).json({ comment: commentt.toObject({ getters: true }) });
+};
+
 export const deleteComment: RequestHandler = async (req, res, next) => {
   const commentId = req.params.id;
 
