@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import { IUser } from "./user";
 
 export interface IBusiness {
   name: string;
@@ -8,6 +9,7 @@ export interface IBusiness {
     lat: number;
     lng: number;
   };
+  users: IUser[];
 }
 
 const businessSchema = new Schema<IBusiness>({
@@ -18,6 +20,7 @@ const businessSchema = new Schema<IBusiness>({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
   },
+  users: [{ type: mongoose.Types.ObjectId, required: true, ref: "User" }],
 });
 
 export const BusinessModel = model<IBusiness>("Business", businessSchema);
