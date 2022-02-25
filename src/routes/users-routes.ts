@@ -7,6 +7,7 @@ import {
   getUsers,
   deleteUser,
   updateUser,
+  saveBusiness,
 } from "../controllers/users-controller";
 
 const router = Router();
@@ -14,6 +15,8 @@ const router = Router();
 router.post("/", fileUpload.single("image"), createUser);
 
 router.post("/login", loginUser);
+
+router.post("/save-business", saveBusiness);
 
 router.get("/", getUsers);
 

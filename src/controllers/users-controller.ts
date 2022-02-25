@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 
 import { UserModel, IUser } from "../models/user";
+import { BusinessModel } from "../models/business";
+import mongoose from "mongoose";
 
 export const getUsers: RequestHandler = async (req, res, next) => {
   let users;
@@ -182,4 +184,43 @@ export const deleteUser: RequestHandler = async (req, res, next) => {
   }
 
   res.json({ message: "User deleted!" });
+};
+
+export const saveBusiness: RequestHandler = async (req, res, next) => {
+  const { businessId, userId } = req.body;
+
+  if (!businessId || !userId) {
+    const error = "No data to process";
+    return next(error);
+  }
+
+  let business;
+
+  try {
+    business = await BusinessModel.findById(businessId);
+  } catch (err) {
+    const error = "Could not find business";
+    return next(error);
+  }
+
+  let user;
+
+  try {
+    user = await UserModel.findById(userId);
+  } catch (err) {
+    const error = "Could not find user";
+    return next(error);
+  }
+
+  try {
+    user?.businesses.push(businessId);
+    business?.users.push(userId);
+    user?.save();
+    business?.save();
+  } catch (err) {
+    const error = "Could not add business";
+    return next(error);
+  }
+
+  res.json({ message: "Business saved to dashboard" });
 };
