@@ -1,7 +1,44 @@
 import { RequestHandler } from "express";
+import mongoose from "mongoose";
 
 import { UserModel } from "../models/user";
-import { BusinessModel } from "../models/business";
+import { BusinessModel, businessSchema, IBusiness } from "../models/business";
+
+export const getDashboardBusinesses: RequestHandler = async (
+  req,
+  res,
+  next
+) => {
+  const userId = req.params.id;
+
+  let user;
+  console.log(userId);
+  try {
+    user = await UserModel.findById(userId);
+  } catch (err) {
+    const error = "Could not find user";
+    return next(error);
+  }
+
+  let dashboardBusinesses = user?.businesses.map((business) => {
+    return BusinessModel.findById(business);
+  });
+
+  let newDashboard;
+  if (dashboardBusinesses) {
+    newDashboard = await Promise.all(dashboardBusinesses);
+  }
+  console.log(newDashboard);
+
+  if (newDashboard !== undefined) {
+    res.json({
+      businesses: newDashboard,
+      // newDashboard.map((business: any) => {
+      //   business.toObject({ getters: true });
+      // }),
+    });
+  }
+};
 
 export const saveBusinessToDashboard: RequestHandler = async (
   req,
