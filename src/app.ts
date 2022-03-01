@@ -1,7 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import path from "path";
-
+import "dotenv/config";
+// dotenv.config()
 import businessRoutes from "./routes/businesses-routes";
 import userRoutes from "./routes/users-routes";
 import commentRoutes from "./routes/comments-routes";
@@ -36,10 +37,12 @@ app.use("/dashboard", dashboardRoutes);
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: err.message });
 });
+console.log(process.env.DB_NAME!);
+console.log(process.env.DB_PASSWORD!);
 
 mongoose
   .connect(
-    "mongodb+srv://colefortner:colefortner@cluster0.psdhm.mongodb.net/test?retryWrites=true&w=majority"
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster2.tqnxr.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
   )
   .then(() => {
     app.listen(5050, () => {
