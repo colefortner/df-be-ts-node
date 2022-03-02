@@ -1,31 +1,47 @@
 import { RequestHandler } from "express";
+import { BusinessModel } from "../models/business";
 import { CommentModel } from "../models/comment";
 
 export const getComments: RequestHandler = async (req, res, next) => {
-  let comments;
+  const businessId = req.params.id;
+
+  let business;
   try {
-    comments = await CommentModel.find({});
+    business = await BusinessModel.findById(businessId);
   } catch (err) {
-    const error = "Could not load comments";
+    const error = "Could not find businesss";
     next(error);
   }
 
   res.json({
-    comments: comments?.map((comment) => comment.toObject({ getters: true })),
+    comments: business?.comments.map((comment) => comment),
   });
 };
 
 export const createComment: RequestHandler = async (req, res, next) => {
   console.log(req.body);
 
-  const { comment } = req.body;
+  const businessId = req.params.id;
 
-  const createdComment = new CommentModel({
+  const { userId, comment } = req.body;
+
+  const createdComment = {
+    userId,
     comment,
-  });
+  };
+
+  let business;
 
   try {
-    await createdComment.save();
+    business = await BusinessModel.findById(businessId);
+  } catch (err) {
+    const error = "Could not find business";
+    return next(error);
+  }
+
+  try {
+    business?.comments.push(createdComment);
+    await business?.save();
   } catch (err) {
     const error = Error("Comment creation failed");
     return next(error);
