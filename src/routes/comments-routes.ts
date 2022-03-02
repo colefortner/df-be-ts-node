@@ -9,7 +9,7 @@ import {
 
 const router = Router();
 
-router.post("/", createComment);
+router.post("/:id", createComment);
 
 router.get("/", getComments);
 
