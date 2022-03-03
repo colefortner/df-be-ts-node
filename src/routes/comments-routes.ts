@@ -11,10 +11,10 @@ const router = Router();
 
 router.post("/:id", createComment);
 
-router.get("/", getComments);
+router.get("/:id", getComments);
 
 router.patch("/:id", updateComment);
 
-router.delete("/:id", deleteComment);
+router.delete("/:bid/:cid", deleteComment);
 
 export default router;

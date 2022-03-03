@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { BusinessModel } from "../models/business";
+import { BusinessModel, IBusiness } from "../models/business";
 import { CommentModel } from "../models/comment";
 
 export const getComments: RequestHandler = async (req, res, next) => {
@@ -82,27 +82,21 @@ export const updateComment: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteComment: RequestHandler = async (req, res, next) => {
-  const commentId = req.params.id;
+  const businessId = req.params.bid;
+  const commentId = req.params.cid;
 
-  let comment;
+  let business: (IBusiness & { _id: any }) | null;
 
-  try {
-    comment = await CommentModel.findById(commentId);
-  } catch (err) {
-    const error = "Could not find comment";
-    return next(error);
-  }
+  business = await BusinessModel.findById(businessId);
 
-  if (!comment) {
-    throw new Error("Could not find error");
-  }
+  let filtered_comment = business?.comments.map((comment, index) => {
+    if (comment.id === commentId) {
+      business?.comments.splice(index, 1);
+      return comment;
+    }
+  });
 
-  try {
-    await comment.remove();
-  } catch (err) {
-    const error = "Could not delete comment";
-    return next(error);
-  }
+  business?.save();
 
-  res.json({ message: "Commnet deleted!" });
+  res.json({ message: "Commnet deleted!", comment: filtered_comment });
 };

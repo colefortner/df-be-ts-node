@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema, model, ObjectId } from "mongoose";
 import { IUser } from "./user";
 
 export interface IBusiness extends mongoose.Document {
@@ -10,6 +10,7 @@ export interface IBusiness extends mongoose.Document {
     lng: number;
   };
   comments: {
+    // _id: mongoose.Types.ObjectId;
     userId: string;
     comment: string;
   }[];
