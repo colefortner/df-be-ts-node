@@ -23,11 +23,12 @@ export const createComment: RequestHandler = async (req, res, next) => {
 
   const businessId = req.params.id;
 
-  const { userId, comment } = req.body;
+  const { userId, comment, rating } = req.body;
 
   const createdComment = {
     userId,
     comment,
+    rating,
   };
 
   let business;

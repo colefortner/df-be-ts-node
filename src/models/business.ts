@@ -12,7 +12,8 @@ export interface IBusiness extends mongoose.Document {
   comments: {
     // _id: mongoose.Types.ObjectId;
     userId: string;
-    comment: string;
+    comment: string | null;
+    rating: number | null;
   }[];
   users: String[];
 }
@@ -29,6 +30,7 @@ export const businessSchema = new Schema<IBusiness>({
     {
       userId: { type: String, required: true },
       comment: { type: String, required: true },
+      rating: { type: Number, required: true },
     },
   ],
   users: [{ type: String, required: true }],
