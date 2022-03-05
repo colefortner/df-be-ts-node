@@ -78,7 +78,12 @@ export const createUser: RequestHandler = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ message: "Created user", createdUser, token: token });
+  // res.status(201).json({ message: "Created user", createdUser, token: token });
+  res.json({
+    userId: createdUser.id,
+    email: createdUser.email,
+    token: token,
+  });
 };
 
 export const loginUser: RequestHandler = async (req, res, next) => {
