@@ -1,6 +1,5 @@
 import { RequestHandler } from "express";
 import { BusinessModel, IBusiness } from "../models/business";
-import { CommentModel } from "../models/comment";
 
 export const getComments: RequestHandler = async (req, res, next) => {
   const businessId = req.params.id;
@@ -52,36 +51,6 @@ export const createComment: RequestHandler = async (req, res, next) => {
   res.status(201).json({ message: "Created comment", createdComment });
 };
 
-export const updateComment: RequestHandler = async (req, res, next) => {
-  const { comment } = req.body;
-
-  const commentId = req.params.id;
-
-  let commentt;
-
-  try {
-    commentt = await CommentModel.findById(commentId);
-  } catch (err) {
-    const error = "Could not find comment";
-    return next(error);
-  }
-
-  if (!commentt) {
-    throw new Error("Could not find comment");
-  }
-
-  commentt.comment = comment;
-
-  try {
-    await commentt?.save();
-  } catch (err) {
-    const error = "Could not save comment update";
-    return next(error);
-  }
-
-  res.status(200).json({ comment: commentt.toObject({ getters: true }) });
-};
-
 export const deleteComment: RequestHandler = async (req, res, next) => {
   const businessId = req.params.bid;
   const commentId = req.params.cid;
@@ -100,4 +69,42 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
   business?.save();
 
   res.json({ message: "Commnet deleted!", comment: filtered_comment });
+};
+
+export const updateComment: RequestHandler = async (req, res, next) => {
+  const { comment, rating } = req.body;
+  const businessId = req.params.bid;
+  const commentId = req.params.cid;
+
+  console.log(rating, comment);
+
+  let business: (IBusiness & { _id: any }) | null;
+
+  try {
+    business = await BusinessModel.findById(businessId);
+  } catch (err) {
+    console.log(err);
+    return next();
+  }
+
+  if (!business) {
+    throw new Error("Could not find business");
+  }
+
+  let filtered_comment = business?.comments.map((mapcomment, index) => {
+    if (mapcomment.id === commentId && business) {
+      business.comments[index].comment = comment;
+      business.comments[index].rating = rating;
+    }
+    return comment;
+  });
+
+  business?.save();
+
+  res.json({
+    message: "Comment updated",
+    commentData: { comment, businessId, blah: filtered_comment },
+  });
+
+  // res.status(200).json({ business: business.toObject({ getters: true }) });
 };

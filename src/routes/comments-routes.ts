@@ -13,7 +13,7 @@ router.post("/:id", createComment);
 
 router.get("/:id", getComments);
 
-router.patch("/:id", updateComment);
+router.patch("/:bid/:cid", updateComment);
 
 router.delete("/:bid/:cid", deleteComment);
 
