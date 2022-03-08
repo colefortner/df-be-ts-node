@@ -81,6 +81,8 @@ export const createUser: RequestHandler = async (req, res, next) => {
   // res.status(201).json({ message: "Created user", createdUser, token: token });
   res.json({
     userId: createdUser.id,
+    username: createdUser.username,
+    userImage: createdUser.image,
     email: createdUser.email,
     token: token,
   });
@@ -130,6 +132,8 @@ export const loginUser: RequestHandler = async (req, res, next) => {
   // res.json({ message: "Login data received" });
   res.json({
     userId: user.id,
+    username: user.username,
+    userImage: user.image,
     email: user.email,
     token: token,
   });
