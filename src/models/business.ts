@@ -5,6 +5,12 @@ export interface IBusiness extends mongoose.Document {
   name: string;
   image: string;
   rating: number;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zip: number;
+  };
   location: {
     lat: number;
     lng: number;
@@ -12,8 +18,11 @@ export interface IBusiness extends mongoose.Document {
   comments: {
     // _id: mongoose.Types.ObjectId;
     userId: string;
+    avatar: string | undefined;
     comment: string | null;
+    commentDate: Date;
     rating: number | null;
+    username: string | undefined;
   }[];
   users: String[];
 }
@@ -22,6 +31,12 @@ export const businessSchema = new Schema<IBusiness>({
   name: { type: String, required: true },
   image: { type: String, required: true },
   rating: { type: Number, required: true },
+  address: {
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    zip: { type: Number, required: true },
+  },
   location: {
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
@@ -29,8 +44,11 @@ export const businessSchema = new Schema<IBusiness>({
   comments: [
     {
       userId: { type: String, required: true },
+      avatar: { type: String, required: true },
       comment: { type: String, required: true },
+      commentDate: { type: Date, required: true },
       rating: { type: Number, required: true },
+      username: { type: String, required: true },
     },
   ],
   users: [{ type: String, required: true }],
