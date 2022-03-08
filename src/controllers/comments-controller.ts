@@ -1,8 +1,12 @@
 import { RequestHandler } from "express";
 import { BusinessModel, IBusiness } from "../models/business";
+import { UserModel } from "../models/user";
 
 export const getComments: RequestHandler = async (req, res, next) => {
   const businessId = req.params.id;
+  // const commentDate = new Date();
+  // console.log(date);
+  // console.log(date.toLocaleDateString());
 
   let business;
   try {
@@ -24,20 +28,27 @@ export const createComment: RequestHandler = async (req, res, next) => {
 
   const { userId, comment, rating } = req.body;
 
-  const createdComment = {
-    userId,
-    comment,
-    rating,
-  };
-
   let business;
+  let user;
+
+  const commentDate = new Date();
 
   try {
     business = await BusinessModel.findById(businessId);
+    user = await UserModel.findById(userId);
   } catch (err) {
     const error = "Could not find business";
     return next(error);
   }
+
+  const createdComment = {
+    userId,
+    comment,
+    commentDate: commentDate,
+    rating,
+    avatar: user?.image,
+    username: user?.username,
+  };
 
   try {
     business?.comments.push(createdComment);
