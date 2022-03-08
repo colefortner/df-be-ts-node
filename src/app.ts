@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 app.use(
-  "src/uploads/images",
+  "/src/uploads/images",
   express.static(path.join("src", "uploads", "images"))
 );
 
