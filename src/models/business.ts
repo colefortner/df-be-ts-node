@@ -11,6 +11,14 @@ export interface IBusiness extends mongoose.Document {
     state: string;
     zip: number;
   };
+  website: string;
+  phone: string;
+  hours: {
+    day: string;
+    open: string;
+    close: string;
+  }[];
+  type: String[];
   location: {
     lat: number;
     lng: number;
@@ -37,6 +45,16 @@ export const businessSchema = new Schema<IBusiness>({
     state: { type: String, required: true },
     zip: { type: Number, required: true },
   },
+  website: { type: String, required: true },
+  phone: { type: String, required: true },
+  hours: [
+    {
+      day: { type: String, required: true },
+      open: { type: String, required: true },
+      close: { type: String, required: true },
+    },
+  ],
+
   location: {
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
