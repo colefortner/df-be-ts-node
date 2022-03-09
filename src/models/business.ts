@@ -29,7 +29,7 @@ export interface IBusiness extends mongoose.Document {
     avatar: string | undefined;
     comment: string | null;
     commentDate: Date;
-    rating: number | null;
+    rating: number;
     username: string | undefined;
   }[];
   users: String[];

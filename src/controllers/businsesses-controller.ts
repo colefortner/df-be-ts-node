@@ -41,6 +41,15 @@ export const getBusinesses: RequestHandler = async (req, res, next) => {
     console.log(err);
     return next(err);
   }
+
+  businesses.map((business) => {
+    business.rating =
+      business.comments?.reduce(
+        (result, comment) => result + comment.rating,
+        0
+      ) / business.comments.length;
+  });
+
   res.json({
     businesses: businesses.map((business) =>
       business.toObject({ getters: true })

@@ -30,6 +30,14 @@ export const getDashboardBusinesses: RequestHandler = async (
   }
   console.log(newDashboard);
 
+  newDashboard?.map((business) => {
+    business!.rating =
+      business!.comments?.reduce(
+        (result, comment) => result + comment.rating,
+        0
+      ) / business!.comments.length;
+  });
+
   if (newDashboard !== undefined) {
     res.json({
       businesses: newDashboard,
