@@ -8,6 +8,7 @@ import userRoutes from "./routes/users-routes";
 import commentRoutes from "./routes/comments-routes";
 import ratingRoutes from "./routes/ratings-routes";
 import dashboardRoutes from "./routes/dashboard-routes";
+import promotionRoutes from "./routes/promotions-routes";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/users", userRoutes);
 app.use("/comments", commentRoutes);
 app.use("/ratings", ratingRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/promotions", promotionRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: err.message });

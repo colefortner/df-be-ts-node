@@ -32,6 +32,10 @@ export interface IBusiness extends mongoose.Document {
     rating: number;
     username: string | undefined;
   }[];
+  promotions: {
+    eventDate: string;
+    eventLink: string;
+  }[];
   users: String[];
 }
 
@@ -54,7 +58,6 @@ export const businessSchema = new Schema<IBusiness>({
       close: { type: String, required: true },
     },
   ],
-
   location: {
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
@@ -67,6 +70,12 @@ export const businessSchema = new Schema<IBusiness>({
       commentDate: { type: Date, required: true },
       rating: { type: Number, required: true },
       username: { type: String, required: true },
+    },
+  ],
+  promotions: [
+    {
+      eventDate: { type: String, required: true },
+      eventLink: { type: String, required: true },
     },
   ],
   users: [{ type: String, required: true }],
