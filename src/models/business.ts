@@ -58,6 +58,7 @@ export const businessSchema = new Schema<IBusiness>({
       close: { type: String, required: true },
     },
   ],
+  type: [{ type: String, required: true }],
   location: {
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },

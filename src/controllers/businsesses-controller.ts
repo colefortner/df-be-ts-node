@@ -6,8 +6,18 @@ import { BusinessModel, IBusiness } from "../models/business";
 const BUSINESSES: IBusiness[] = [];
 
 export const createBusiness: RequestHandler = async (req, res, next) => {
-  const { name, image, rating, location, address, website, phone, hours } =
-    req.body;
+  const {
+    name,
+    image,
+    rating,
+    location,
+    address,
+    website,
+    phone,
+    hours,
+    type,
+    promotions,
+  } = req.body;
 
   const createdBusiness = new BusinessModel({
     name,
@@ -18,6 +28,8 @@ export const createBusiness: RequestHandler = async (req, res, next) => {
     website,
     phone,
     hours,
+    type,
+    promotions,
   });
 
   try {
